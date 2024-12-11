@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import {
   Disclosure,
   DisclosureButton,
@@ -16,8 +17,7 @@ import {
 
 const Navbar = () => {
   const navigation = [
-    { name: "Home", href: "#", current: true },
-    { name: "", href: "#", current: false },
+    { name: "Home", to: "/", current: true },
   ];
 
   function classNames(...classes) {
@@ -49,9 +49,9 @@ const Navbar = () => {
             <div className="hidden sm:ml-6 sm:block">
               <div className="flex space-x-4">
                 {navigation.map((item) => (
-                  <a
+                  <Link
                     key={item.name}
-                    href={item.href}
+                    to={item.to}
                     aria-current={item.current ? "page" : undefined}
                     className={classNames(
                       item.current
@@ -61,20 +61,20 @@ const Navbar = () => {
                     )}
                   >
                     {item.name}
-                  </a>
+                  </Link>
                 ))}
               </div>
             </div>
           </div>
           <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-            <button
-              type="button"
+            <Link
+              to="/cart"
               className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
             >
               <span className="absolute -inset-1.5" />
               <span className="sr-only">View notifications</span>
               <ShoppingCartIcon aria-hidden="true" className="size-6" />
-            </button>
+            </Link>
 
             {/* Profile dropdown */}
             <Menu as="div" className="relative ml-7">
@@ -124,8 +124,8 @@ const Navbar = () => {
           {navigation.map((item) => (
             <DisclosureButton
               key={item.name}
-              as="a"
-              href={item.href}
+              as="Link"
+              to={item.to}
               aria-current={item.current ? "page" : undefined}
               className={classNames(
                 item.current
