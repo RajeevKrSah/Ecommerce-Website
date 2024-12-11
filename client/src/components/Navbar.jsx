@@ -18,7 +18,6 @@ const Navbar = () => {
   const navigation = [
     { name: "Home", href: "#", current: true },
     { name: "", href: "#", current: false },
-    
   ];
 
   function classNames(...classes) {
@@ -43,8 +42,8 @@ const Navbar = () => {
               />
             </DisclosureButton>
           </div>
-          <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-            <div className="flex shrink-0 items-center text-white text-2xl font-bold">
+          <div className="flex lg:flex-1 md:ml-0 ml-12 items-center justify-center sm:items-stretch sm:justify-start">
+            <div className="flex shrink-0  items-center text-white text-2xl font-bold">
               E Commerce
             </div>
             <div className="hidden sm:ml-6 sm:block">
