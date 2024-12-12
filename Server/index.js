@@ -2,10 +2,17 @@ const express = require('express')
 const connectDB = require('./db/index.js')
 
 require('dotenv').config()
+const userRouter = require('./routes/user.js')
+const authRouter = require('./routes/auth.js')
 const app = express()
 
 PORT = process.env.PORT || 4000
 
+app.use(express.json())
+app.use('/api/auth',authRouter)
+app.use('/api/users',userRouter)
+
+// Database connection 
 connectDB()
 .then(()=>{
     app.listen(PORT,()=>{
