@@ -74,7 +74,6 @@ const ProductList = () => {
     category: [],
     size: [],
   });
-  // console.log("Product List" ,selectedFilters);
 
   const handleFilterClick = (sectionId, value) => {
     setSelectedFilters((prev) => {

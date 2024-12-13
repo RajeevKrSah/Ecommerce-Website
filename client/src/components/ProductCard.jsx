@@ -12,11 +12,10 @@ const ProductCard = ({ item }) => {
         <div className="mt-4 flex justify-between">
           <div>
             <h3 className="text-sm text-gray-700">{item.title}</h3>
-            <p className="mt-1 text-sm text-gray-500">{item.color}</p>
           </div>
           <div>
-            <p className="text-sm font-medium text-gray-900">{item.price}</p>
-            <p className="text-sm font-medium text-gray-900">{item.category}</p>
+            <p className="text-sm font-medium text-gray-900">$ {item.price}</p>
+
           </div>
         </div>
       </div>
