@@ -20,7 +20,7 @@ import {
   Squares2X2Icon,
 } from "@heroicons/react/20/solid";
 
-import Product from "./Product";
+import Products from "./Products";
 
 const sortOptions = [
   { name: "Most Popular", href: "#", current: true },
@@ -362,12 +362,8 @@ const ProductList = () => {
                 ))}
               </form>
 
-              {/* Product grid */}
               <div className="lg:col-span-3">
-                <Product
-                  filters={selectedFilters}
-                  sort={selectedSort}
-                />
+                <Products filters={selectedFilters} sort={selectedSort} />
               </div>
             </div>
           </section>

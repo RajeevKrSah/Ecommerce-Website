@@ -1,6 +1,6 @@
 const express = require('express')
 const connectDB = require('./db/index.js')
-
+const cors = require('cors')
 require('dotenv').config()
 const userRouter = require('./routes/user.js')
 const authRouter = require('./routes/auth.js')
@@ -9,7 +9,7 @@ const cartRouter = require('./routes/cart.js')
 const app = express()
 
 PORT = process.env.PORT || 4000
-
+app.use(cors())
 app.use(express.json())
 app.use('/api/auth',authRouter)
 app.use('/api/users',userRouter)
