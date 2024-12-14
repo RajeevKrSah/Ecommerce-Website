@@ -1,25 +1,29 @@
 import React from "react";
-
+import {Link} from "react-router-dom"
 const ProductCard = ({ item }) => {
   return (
-    <>
-      <div key={item._id} className="group relativ">
+
+      <div key={item._id} className="px-4 group relativ shadow-xl rounded-md cursor-pointer">
+      <Link to={`/products/${item._id}`}>
         <img
           alt={item.desc}
           src={item.img}
-          className="aspect-square w-full rounded-md bg-gray-200 object-cover group-hover:opacity-75 lg:aspect-auto lg:h-80"
+          className="aspect-square w-full rounded-lg bg-gray-200 object-cover md:h-70 lg:h-75 transition-transform duration-500 group-hover:scale-105"
         />
-        <div className="mt-4 flex justify-between">
-          <div>
-            <h3 className="text-sm text-gray-700">{item.title}</h3>
+      </Link>
+      <div className="p-1 bg-white">
+        <h3 className="text-lg font-semibold text-gray-800 truncate">{item.title}</h3>
+        <div className="flex justify-between items-center my-1">
+          <div className="flex">
+            <p className="text-base text-gray-600 mr-1">Price :</p>
+            <p className="text-base font-bold text-gray-800">${item.price}</p>
           </div>
-          <div>
-            <p className="text-sm font-medium text-gray-900">$ {item.price}</p>
-
-          </div>
+          <p className="text-sm text-gray-500">
+            Brand: <span className="font-medium text-gray-800">{item.brand}</span>
+          </p>
         </div>
       </div>
-    </>
+      </div>
   );
 };
 
