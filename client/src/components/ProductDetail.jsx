@@ -56,12 +56,19 @@ const ProductDetail = () => {
         "http://localhost:4000/api/cart",
         {
           userId: userDetails[0]._id,
-          products: [{ productId: product._id }],
+          products: [
+            {
+              productId: product._id,
+              size: product.selectedSize || "default-size",
+              color: product.selectedColor || "default-color",
+            },
+          ],
         },
         {
           headers: { token: `Bearer ${token}` },
         }
       );
+  
       console.log("Cart updated successfully:", response.data);
     } catch (error) {
       console.error("Error adding to cart:", error);

@@ -1,62 +1,138 @@
-import React from "react";
+import React, { useState, useEffect, useCallback } from "react";
+import axios from "axios";
+import { Link } from "react-router-dom";
 
-const products = [
-  {
-    id: 1,
-    name: "Throwback Hip Bag",
-    href: "#",
-    color: "Salmon",
-    price: "$90.00",
-    quantity: 1,
-    imageSrc:
-      "https://tailwindui.com/plus/img/ecommerce-images/shopping-cart-page-04-product-01.jpg",
-    imageAlt:
-      "Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt.",
-  },
-  {
-    id: 2,
-    name: "Medium Stuff Satchel",
-    href: "#",
-    color: "Blue",
-    price: "$32.00",
-    quantity: 1,
-    imageSrc:
-      "https://tailwindui.com/plus/img/ecommerce-images/shopping-cart-page-04-product-02.jpg",
-    imageAlt:
-      "Front of satchel with blue canvas body, black straps and handle, drawstring top, and front zipper pouch.",
-  },
-  // More products...
-];
 const Cart = () => {
+  const [cartItems, setCartItems] = useState([]);
+  const [productDetails, setProductDetails] = useState([]);
+  const [cartError, setCartError] = useState(null);
+  const [productError, setProductError] = useState(null);
+  const [cartLoading, setCartLoading] = useState(false);
+  const [productLoading, setProductLoading] = useState(false);
+
+  const token =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NTljMmFjMmUwNmJmMzEwMDA4ZDk1ZSIsImlzQWRtaW4iOnRydWUsImlhdCI6MTczNDMzODM4NiwiZXhwIjoxNzM0NDI0Nzg2fQ.V8CaG7P6fFD6pzVIqa3EbA9JX6442I5NaFoieEed75M";
+  const userId = "6759c2ac2e06bf310008d95e";
+
+  const headers = useCallback({ token: `Bearer ${token}` }, [token]);
+
+  // Helper function to fetch data
+  const fetchData = async (url, options = {}) => {
+    try {
+      const response = await axios.get(url, options);
+      return response.data;
+    } catch (error) {
+      console.error(`Error fetching data from ${url}:`, error);
+      throw error;
+    }
+  };
+
+  // Fetch cart items
+  useEffect(() => {
+    const fetchCartItems = async () => {
+      setCartLoading(true);
+      setCartError(null);
+      try {
+        const cartData = await fetchData(
+          `http://localhost:4000/api/cart/find/${userId}`,
+          { headers }
+        );
+        // Extract product IDs from cart items
+        const productIds = cartData.flatMap((item) =>
+          item.products.map((product) => product.productId)
+        );
+        console.log(cartData)
+        setCartItems(productIds);
+      } catch (error) {
+        setCartError("Failed to load cart items.");
+      } finally {
+        setCartLoading(false);
+      }
+    };
+
+    fetchCartItems();
+  }, [userId, headers]);
+
+  // Fetch product details for cart items
+  useEffect(() => {
+    if (cartItems.length === 0) return;
+
+    const fetchProductDetails = async () => {
+      setProductLoading(true);
+      setProductError(null);
+      try {
+        const productDetailPromises = cartItems.map((id) =>
+          fetchData(`http://localhost:4000/api/products/find/${id}`)
+        );
+
+        const products = await Promise.all(productDetailPromises);
+        setProductDetails(products);
+      } catch (error) {
+        setProductError("Failed to load product details.");
+      } finally {
+        setProductLoading(false);
+      }
+    };
+
+    fetchProductDetails();
+  }, [cartItems]);
+
+  const handleRemoveBtn = async (productId) => {
+
+  };
   return (
     <>
-      <div className="mx-auto mt-2 max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="px-4 py-6 sm:px-6">
-          <h1 className="text-4xl my-1 font-bold tracking-tight text-gray-900">
-            Cart
-          </h1>
+      <div className="flex justify-center mx-auto max-w-7xl px-4 bg-gray-50 lg:px-64 md:px-16 sm:px-6">
+      {cartLoading && (
+        <p className="text-lg text-center animate-pulse my-5 text-gray-700 sm:text-xl md:text-2xl lg:text-3xl">
+          Loading cart...
+        </p>
+      )}
+      {cartError && (
+        <p className="text-lg text-center my-5 text-red-600 sm:text-xl md:text-2xl lg:text-3xl">
+          {cartError}
+        </p>
+      )}
+      {productLoading && (
+        <p className="text-lg text-center animate-pulse my-5 text-gray-700 sm:text-xl md:text-2xl lg:text-3xl">
+          Loading Cart items details...
+        </p>
+      )}
+      {productError && (
+        <p className="text-lg text-center my-5 text-red-600 sm:text-xl md:text-2xl lg:text-3xl">
+          {productError}
+        </p>
+      )}
+      {!cartLoading && !productLoading && productDetails.length === 0 && (
+        <p className="text-lg text-center my-5 text-gray-700 sm:text-xl md:text-2xl lg:text-3xl">
+          Your cart is empty.
+        </p>
+      )}
+      </div>
+      <div className="mx-auto pt-2 bg-gray-50 max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="px-4 py-6 lg:px-44 sm:px-6">
+          <h2 className="text-xl font-semibold mb-4">Shopping Cart</h2>
           <div className="flow-root">
             <ul role="list" className="-my-6 divide-y divide-gray-200">
-              {products.map((product) => (
-                <li key={product.id} className="flex py-6">
-                  <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
+              {productDetails.map((product) => (
+                <li key={product._id} className="flex py-6">
+                  <div className="h-32 w-32 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
+                  <Link to={`/products/${product._id}`}>
                     <img
-                      src={product.imageSrc}
-                      alt={product.imageAlt}
+                      src={product.img}
+                      alt={product.titlet}
                       className="h-full w-full object-cover object-center"
-                    />
+                      />
+                    </Link>
                   </div>
                   <div className="ml-4 flex flex-1 flex-col">
                     <div>
                       <div className="flex justify-between text-base font-medium text-gray-900">
                         <h3>
-                          <a href={product.href}>{product.name}</a>
+                          <Link to={`/products/${product._id}`}>{product.title}</Link>
                         </h3>
-                        <p className="ml-4">{product.price}</p>
+                        <p className="ml-4">$ {product.price}</p>
                       </div>
-                      <p className="mt-1 text-sm text-gray-500">
-                        {product.color}
-                      </p>
                     </div>
                     <div className="flex flex-1 items-end justify-between text-sm">
                       <div className="text-gray-500">
@@ -69,12 +145,16 @@ const Cart = () => {
                         <select>
                           <option value="1">1</option>
                           <option value="2">2</option>
+                          <option value="3">3</option>
                         </select>
                       </div>
                       <div className="flex">
                         <button
                           type="button"
                           className="font-medium text-indigo-600 hover:text-indigo-500"
+                          onClick={()=>{
+                            handleRemoveBtn(product._id)
+                          }}
                         >
                           Remove
                         </button>
@@ -86,25 +166,30 @@ const Cart = () => {
             </ul>
           </div>
         </div>
-        <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
-          <div className="flex justify-between text-base font-medium text-gray-900">
-            <p>Subtotal</p>
-            <p>$262.00</p>
+        <div className="border-t border-gray-200 px-4 py-4 lg:px-64 md:px-16 sm:px-6">
+          <div className="mt-6 p-4 bg-gray-100 rounded-lg">
+            <div className="flex justify-between py-1">
+              <p className="text-gray-600">Subtotal</p>
+              <p className="font-semibold">$262.00</p>
+            </div>
+            <div className="flex justify-between py-1">
+              <p className="text-gray-600">Shipping</p>
+              <p className="font-semibold">$5.00</p>
+            </div>
+            <div className="flex justify-between py-1">
+              <p className="text-gray-600">Tax</p>
+              <p className="font-semibold">$53.40</p>
+            </div>
+            <div className="flex justify-between border-t border-gray-300 pt-2 mt-2">
+              <p className="font-semibold">Order Total</p>
+              <p className="font-semibold">$320.40</p>
+            </div>
           </div>
-          <p className="mt-0.5 text-sm text-gray-500">
-            Shipping and taxes calculated at checkout.
-          </p>
-          <div className="mt-6">
-            <a
-              href="#"
-              className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
-            >
-              Checkout
-            </a>
-          </div>
-          <div className="mt-6 flex justify-center text-center text-sm text-gray-500">
-            <p className="mr-4">or</p>
-            <a href="#">
+          <button className="w-full mt-6 bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700">
+            Continue to Payment
+          </button>
+          <div className="mt-4 flex justify-center text-center text-sm text-gray-500">
+            <Link to="/">
               <button
                 type="button"
                 className="font-medium"
@@ -113,7 +198,7 @@ const Cart = () => {
                 Continue Shopping
                 <span aria-hidden="true"> &rarr;</span>
               </button>
-            </a>
+            </Link>
           </div>
         </div>
       </div>

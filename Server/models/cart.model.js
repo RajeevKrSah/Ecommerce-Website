@@ -14,5 +14,5 @@ const CartSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-
+CartSchema.index({ userId: 1 });
 module.exports = mongoose.model("Cart", CartSchema);
