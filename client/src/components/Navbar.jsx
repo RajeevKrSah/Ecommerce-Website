@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Disclosure,
   DisclosureButton,
@@ -16,9 +16,19 @@ import {
 } from "@heroicons/react/24/outline";
 
 const Navbar = () => {
+  const navigate = useNavigate()
   const navigation = [
     { name: "Home", to: "/", current: true },
   ];
+// Sign Out handler
+  const handleSignOut = () =>{
+    localStorage.removeItem('token');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('loggedInUser');
+    setTimeout(() => {
+      navigate('/login');
+    }, 1000);
+  }
 
   function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
@@ -106,12 +116,12 @@ const Navbar = () => {
                   </a>
                 </MenuItem>
                 <MenuItem>
-                  <a
-                    href="#"
+                  <button
                     className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:outline-none"
+                    onClick={handleSignOut}
                   >
                     Sign out
-                  </a>
+                  </button>
                 </MenuItem>
               </MenuItems>
             </Menu>
@@ -122,10 +132,8 @@ const Navbar = () => {
       <DisclosurePanel className="sm:hidden">
         <div className="space-y-1 px-2 pb-3 pt-2">
           {navigation.map((item) => (
+            <Link to={item.to} key={item.name}>
             <DisclosureButton
-              key={item.name}
-              as="Link"
-              to={item.to}
               aria-current={item.current ? "page" : undefined}
               className={classNames(
                 item.current
@@ -136,6 +144,7 @@ const Navbar = () => {
             >
               {item.name}
             </DisclosureButton>
+            </Link>
           ))}
         </div>
       </DisclosurePanel>

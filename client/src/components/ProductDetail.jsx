@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-
+import useAuthToken from "../hooks/useAuthToken";
+const APIUrl = import.meta.env.VITE_API_URL;
 const ProductDetail = () => {
-  const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NTljMmFjMmUwNmJmMzEwMDA4ZDk1ZSIsImlzQWRtaW4iOnRydWUsImlhdCI6MTczNDI0NzYzNywiZXhwIjoxNzM0MzM0MDM3fQ.3MdCmwb4LYhMFostVf-Y-c5au09kVLMHGUZIGFG2NDo"
+  const {token} = useAuthToken;
   const [product, setProduct] = useState(null);
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
@@ -15,7 +16,7 @@ const ProductDetail = () => {
     const fetchProductDetails = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:4000/api/products/find/${id}`
+          `${APIUrl}/api/products/find/${id}`
         );
         setProduct(response.data);
         setSelectedSize(response.data.size?.[0] || "");
@@ -33,7 +34,7 @@ const ProductDetail = () => {
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
-        const response = await axios.get("http://localhost:4000/api/users", {
+        const response = await axios.get(`${APIUrl}/api/users`, {
           headers: { token: `Bearer ${token}` },
         });
         setUserDetails(response.data);
@@ -53,7 +54,7 @@ const ProductDetail = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:4000/api/cart",
+        `${APIUrl}/api/cart`,
         {
           userId: userDetails[0]._id,
           products: [

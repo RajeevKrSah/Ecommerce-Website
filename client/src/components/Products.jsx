@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import ProductCard from "./ProductCard";
 import axios from "axios";
-
+const APIUrl = import.meta.env.VITE_API_URL;
 const Products = ({ filters = {}, sort }) => {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
 
   useEffect(() => {
     axios
-      .get("http://localhost:4000/api/products")
+      .get(`${APIUrl}/api/products`)
       .then((response) => {
         setProducts(response.data);
       })

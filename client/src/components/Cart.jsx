@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
-
+import useAuthToken from "../hooks/useAuthToken";
+const APIUrl = import.meta.env.VITE_API_URL;
 const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
   const [productDetails, setProductDetails] = useState([]);
@@ -10,9 +11,8 @@ const Cart = () => {
   const [cartLoading, setCartLoading] = useState(false);
   const [productLoading, setProductLoading] = useState(false);
 
-  const token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NTljMmFjMmUwNmJmMzEwMDA4ZDk1ZSIsImlzQWRtaW4iOnRydWUsImlhdCI6MTczNDMzODM4NiwiZXhwIjoxNzM0NDI0Nzg2fQ.V8CaG7P6fFD6pzVIqa3EbA9JX6442I5NaFoieEed75M";
-  const userId = "6759c2ac2e06bf310008d95e";
+  const { token, userId } = useAuthToken;
+  
 
   const headers = useCallback({ token: `Bearer ${token}` }, [token]);
 
@@ -34,7 +34,7 @@ const Cart = () => {
       setCartError(null);
       try {
         const cartData = await fetchData(
-          `http://localhost:4000/api/cart/find/${userId}`,
+          `${APIUrl}/api/cart/find/${userId}`,
           { headers }
         );
         // Extract product IDs from cart items
@@ -62,7 +62,7 @@ const Cart = () => {
       setProductError(null);
       try {
         const productDetailPromises = cartItems.map((id) =>
-          fetchData(`http://localhost:4000/api/products/find/${id}`)
+          fetchData(`${APIUrl}/api/products/find/${id}`)
         );
 
         const products = await Promise.all(productDetailPromises);
