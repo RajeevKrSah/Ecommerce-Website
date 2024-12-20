@@ -136,7 +136,7 @@ const ProductList = () => {
     brand: [],
     size: [],
   });
-  console.log(selectedFilters);
+
 
   const handleFilterClick = (sectionId, value) => {
     setSelectedFilters((prev) => {

@@ -3,7 +3,7 @@ import {Link} from "react-router-dom"
 const ProductCard = ({ item }) => {
   return (
 
-      <div key={item._id} className="px-4 group relativ shadow-xl rounded-md cursor-pointer">
+      <div key={item._id} className="px-4 group relativ shadow-md rounded-md cursor-pointer">
       <Link to={`/products/${item._id}`}>
         <img
           alt={item.desc}
@@ -12,7 +12,7 @@ const ProductCard = ({ item }) => {
         />
       </Link>
       <div className="p-1 bg-white">
-        <h3 className="text-lg font-semibold text-gray-800 truncate">{item.title}</h3>
+        <h3 className="text-base font-semibold text-gray-600 truncate">{item.title}</h3>
         <div className="flex justify-between items-center my-1">
           <div className="flex">
             <p className="text-base text-gray-600 mr-1">Price :</p>

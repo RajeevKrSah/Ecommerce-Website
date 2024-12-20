@@ -3,21 +3,18 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import useAuthToken from "../hooks/useAuthToken";
 const APIUrl = import.meta.env.VITE_API_URL;
+
 const ProductDetail = () => {
-  const {token} = useAuthToken;
+  const { token, userId } = useAuthToken();
   const [product, setProduct] = useState(null);
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
   const { id } = useParams();
 
-  const [userDetails, setUserDetails] = useState(null);
-
   useEffect(() => {
     const fetchProductDetails = async () => {
       try {
-        const response = await axios.get(
-          `${APIUrl}/api/products/find/${id}`
-        );
+        const response = await axios.get(`${APIUrl}/api/products/find/${id}`);
         setProduct(response.data);
         setSelectedSize(response.data.size?.[0] || "");
         setSelectedColor(response.data.color?.[0] || "");
@@ -29,39 +26,46 @@ const ProductDetail = () => {
     fetchProductDetails();
   }, [id]);
 
-
-
-  useEffect(() => {
-    const fetchUserDetails = async () => {
-      try {
-        const response = await axios.get(`${APIUrl}/api/users`, {
-          headers: { token: `Bearer ${token}` },
-        });
-        setUserDetails(response.data);
-      } catch (error) {
-        console.error("Error fetching user details:", error);
-      }
-    };
-
-    fetchUserDetails();
-  }, [token]);
-
   const handleAddToCart = async () => {
-    if (!userDetails || !product) {
-      console.error("User or product details are missing.");
-      return;
-    }
-
     try {
+      // Fetching the current cart data
+      const cartResponse = await axios.get(
+        `${APIUrl}/api/cart/find/${userId}`,
+        {
+          headers: { token: `Bearer ${token}` },
+        }
+      );
+      const cartItems = cartResponse.data;
+      let isProductInCart = false;
+
+      // Checking if the product exists in the cart
+      cartItems.forEach((cartItem) => {
+        cartItem.products.forEach((item) => {
+          if (
+            item.productId === product._id ||
+            item.size === product.selectedSize ||
+            item.color === product.selectedColor
+          ) {
+            isProductInCart = true;
+            return;
+          }
+        });
+      });
+
+      if (isProductInCart) {
+        // Notifing user
+        console.log("Product is already in the cart.");
+        return;
+      }
       const response = await axios.post(
         `${APIUrl}/api/cart`,
         {
-          userId: userDetails[0]._id,
+          userId: userId,
           products: [
             {
               productId: product._id,
-              size: product.selectedSize || "default-size",
-              color: product.selectedColor || "default-color",
+              size: selectedSize,
+              color: selectedColor,
             },
           ],
         },
@@ -69,13 +73,14 @@ const ProductDetail = () => {
           headers: { token: `Bearer ${token}` },
         }
       );
-  
-      console.log("Cart updated successfully:", response.data);
+      console.log("response", response.data);
+
+      console.log("Cart updated successfully:");
     } catch (error) {
-      console.error("Error adding to cart:", error);
+      console.error("Error product adding to cart:", error);
     }
   };
-  
+
   if (!product) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -87,29 +92,29 @@ const ProductDetail = () => {
   }
 
   return (
-    <div className="flex flex-col lg:flex-row items-center bg-white lg:my-10 md:my-6 rounded-lg shadow-xl max-w-6xl mx-auto p-5 md:p-7 lg:p-12">
+    <div className="flex flex-col lg:flex-row items-center bg-white lg:mb-10 md:mb-6 rounded-lg shadow-xl max-w-6xl mx-auto p-5 md:p-7 lg:p-12">
       {/* Product Image Section */}
-      <div className="w-full lg:w-1/2">
+      <div className="w-full lg:w-1/2 flex justify-center">
         <img
           src={product.img}
           alt={product.title}
-          className="rounded-md w-full h-auto object-cover shadow-md"
+          className="w-full lg:w-[500px] lg:h-[500px] md:w-[500px] object-cover object-center shadow-xl rounded-md"
         />
       </div>
 
       {/* Product Details Section */}
-      <div className="w-full lg:w-1/2 mt-6 lg:mt-0 lg:pl-8">
-        <h2 className="text-3xl font-bold text-gray-800">{product.title}</h2>
-        <p className="text-sm text-gray-600 mt-2">{product.desc}</p>
-        <p className="text-2xl font-medium text-gray-800 mt-4">
+      <div className="w-full lg:w-1/2 mt-4 lg:mt-0 lg:pl-8">
+        <h2 className="text-2xl font-bold text-gray-800">{product.title}</h2>
+        <p className="text-base text-gray-600 mt-2">{product.desc}</p>
+        <p className="md:text-xl text-lg font-medium text-gray-800 mt-2">
           Price :
-          <span className="text-2xl ml-4 font-bold text-gray-800">
+          <span className="md:text-xl text-lg ml-2 font-bold text-gray-800">
             ${product.price}
           </span>
         </p>
 
         {/* Ratings */}
-        <div className="flex items-center mt-4">
+        <div className="flex items-center mt-2">
           <div className="flex text-yellow-500">
             {[...Array(5)].map((_, idx) => (
               <span key={idx}>
@@ -125,16 +130,14 @@ const ProductDetail = () => {
         </div>
 
         {/* Color Options */}
-        <div className="mt-6">
-          <h4 className="text-sm font-medium text-gray-800">Color</h4>
+        <div className="mt-3">
+          <h4 className="text-base font-medium text-gray-800">Color</h4>
           <div className="flex items-center mt-2 space-x-3">
             {product.color?.map((color) => (
               <div
                 key={color}
                 className={`w-7 h-7 rounded-full border-2 ${
-                  selectedColor === color
-                    ? "border-blue-500"
-                    : "border-gray-50"
+                  selectedColor === color ? "border-blue-500" : "border-gray-50"
                 } cursor-pointer`}
                 style={{ backgroundColor: color }}
                 onClick={() => setSelectedColor(color)}
@@ -145,7 +148,7 @@ const ProductDetail = () => {
         </div>
 
         {/* Size Options */}
-        <div className="mt-6">
+        <div className="mt-2">
           <h4 className="text-sm font-medium text-gray-800">Size</h4>
           <div className="grid grid-cols-3 gap-3 mt-2">
             {["S", "M", "L", "XL", "XXL", "XXXL"].map((size) => (
@@ -165,16 +168,6 @@ const ProductDetail = () => {
               </button>
             ))}
           </div>
-        </div>
-
-        {/* Selected Size and Color */}
-        <div className="mt-4">
-          <p className="text-sm text-gray-600">
-            <strong>Selected Size:</strong> {selectedSize || "None"}
-          </p>
-          <p className="text-sm text-gray-600">
-            <strong>Selected Color:</strong> {selectedColor || "None"}
-          </p>
         </div>
 
         {/* Add to Bag Button */}
