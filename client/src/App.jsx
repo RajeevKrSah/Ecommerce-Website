@@ -8,6 +8,8 @@ import Login from "./Pages/Login";
 import Signup from "./Pages/Signup";
 import { useState } from "react";
 import RefrshHandler from "./services/RefrshHandler";
+import '@fortawesome/fontawesome-free/css/all.min.css';
+
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
