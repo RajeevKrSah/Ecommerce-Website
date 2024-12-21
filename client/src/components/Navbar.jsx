@@ -22,6 +22,7 @@ const Navbar = () => {
   const navigate = useNavigate()
   const navigation = [
     { name: "Home", to: "/", },
+    { name: "About", to: "/about", },
     { name: "Login", to: "/login", },
   ];
 
@@ -120,7 +121,7 @@ const Navbar = () => {
                   <span className="absolute -inset-1.5" />
                   <span className="sr-only">Open user menu</span>
                   <div className="text-gray-200 text-xl px-1">
-                  <i class="fa-solid fa-user"></i>
+                  <i className="fa-solid fa-user"></i>
                   </div>
                 </MenuButton>
               </div>

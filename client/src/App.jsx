@@ -9,6 +9,7 @@ import Signup from "./Pages/Signup";
 import { useState } from "react";
 import RefrshHandler from "./services/RefrshHandler";
 import '@fortawesome/fontawesome-free/css/all.min.css';
+import About from "./components/About"
 
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
         <Route path="/cart" element={<CartPage />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/about" element={<About />} />
       </Routes>
     </>
   );
