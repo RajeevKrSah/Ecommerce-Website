@@ -19,7 +19,7 @@ import {
 const Navbar = () => {
   const navigation = [
     { name: "Home", to: "/", },
-    { name: "About", to: "/", },
+    { name: "About", to: "/about", },
   ];
   return (
     <Disclosure as="nav" className="bg-gray-800">
