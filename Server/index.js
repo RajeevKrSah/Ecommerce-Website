@@ -4,6 +4,7 @@ import connectDB from './db/index.js'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
 
+import authRouter from './routes/auth.js'
 const app = express()
  
 const PORT = process.env.PORT || 4000
@@ -16,6 +17,9 @@ app.use(cors({
 app.use(express.json({limit: "16kb"}))
 app.use(express.urlencoded({extended: true, limit: "16kb"}))
 app.use(cookieParser())
+
+
+app.use('/api/auth',authRouter)
 
 // Database connection 
 connectDB()
