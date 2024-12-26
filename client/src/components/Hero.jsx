@@ -1,6 +1,19 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 const Hero = () => {
+  const [products, setProducts] = useState([]);
+  useEffect(() => {
+    axios
+      .get("/api/products?category=women")
+      .then((res) => {
+        setProducts(res.data.slice(0, 8));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+  console.log(products);
   return (
     <div className="mx-auto bg-gray-50 max-w-7xl px-2 sm:px-6 lg:px-8">
       {/* Banner Section */}
@@ -64,6 +77,36 @@ const Hero = () => {
               </button>
             </div>
           </div>
+        </div>
+      </section>
+      {/* Trending Products */}
+      <section>
+        <h2 className="text-2xl md:text-3xl font-bold text-center mb-8">
+          Trending Products
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pb-12">
+          {products.length > 0 &&
+            products.map((item) => (
+              <div
+                key={item._id}
+                className="border p-3 rounded-lg bg-gray-50 hover:shadow-md transition-shadow"
+              >
+                <img
+                  src={item.img}
+                  alt={item.title}
+                  className="aspect-square w-full rounded-lg object-cover md:h-70 lg:h-75"
+                />
+                <div className="flex justify-between items-center mt-2 gap-2">
+                  <h3 className="text-base font-semibold truncate">
+                    {item.title}
+                  </h3>
+                  <p className="text-gray-700">${item.price}</p>
+                </div>
+                <button className="mt-2 w-full px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white font-medium rounded">
+                  Add to Cart
+                </button>
+              </div>
+            ))}
         </div>
       </section>
     </div>
