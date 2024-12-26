@@ -5,6 +5,8 @@ import cors from 'cors'
 import cookieParser from 'cookie-parser'
 
 import authRouter from './routes/auth.js'
+import productRouter from './routes/product.js'
+
 const app = express()
  
 const PORT = process.env.PORT || 4000
@@ -20,7 +22,7 @@ app.use(cookieParser())
 
 
 app.use('/api/auth',authRouter)
-
+app.use('/api/products',productRouter)
 // Database connection 
 connectDB()
 .then(()=>{
