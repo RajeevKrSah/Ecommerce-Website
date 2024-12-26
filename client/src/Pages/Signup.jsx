@@ -10,7 +10,7 @@ import {
 
 const Signup = () => {
   const [signupInfo, setSignupInfo] = useState({
-    fullName:"",
+    fullName: "",
     username: "",
     email: "",
     password: "",
@@ -75,7 +75,7 @@ const Signup = () => {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100 py-8">
-      <div className="w-full max-w-md space-y-6 bg-slate-200 p-6 rounded-lg shadow-md">
+      <div className="w-full max-w-sm space-y-6 bg-slate-200 p-6 rounded-lg shadow-md">
         <div className="text-center">
           <h2 className="mt-5 text-center text-3xl font-bold leading-9 tracking-tight text-gray-900">
             Create New Account
@@ -83,14 +83,14 @@ const Signup = () => {
         </div>
 
         <form className="space-y-5" onSubmit={handleSubmit}>
-        <div>
+          <div>
             <label
               htmlFor="fullName"
               className="block text-sm font-medium leading-6 text-gray-900"
             >
               Full Name
             </label>
-            <div className="mt-1">
+            <div className="mt-0.5">
               <input
                 id="fullName"
                 name="fullName"
@@ -99,6 +99,7 @@ const Signup = () => {
                 onChange={handleChange}
                 value={signupInfo.fullName}
                 aria-required="true"
+                autoComplete="Full Name"
               />
             </div>
           </div>
@@ -109,7 +110,7 @@ const Signup = () => {
             >
               User Name
             </label>
-            <div className="mt-1">
+            <div className="mt-0.5">
               <input
                 id="username"
                 name="username"
@@ -118,6 +119,7 @@ const Signup = () => {
                 onChange={handleChange}
                 value={signupInfo.username}
                 aria-required="true"
+                autoComplete="username"
               />
             </div>
           </div>
@@ -129,7 +131,7 @@ const Signup = () => {
             >
               Email address
             </label>
-            <div className="mt-2">
+            <div className="mt-0.5">
               <input
                 id="email"
                 name="email"
@@ -138,6 +140,7 @@ const Signup = () => {
                 onChange={handleChange}
                 value={signupInfo.email}
                 aria-required="true"
+                autoComplete="email"
               />
             </div>
           </div>
@@ -149,7 +152,7 @@ const Signup = () => {
             >
               Password
             </label>
-            <div className="mt-2">
+            <div className="mt-0.5">
               <input
                 id="password"
                 name="password"
@@ -158,6 +161,7 @@ const Signup = () => {
                 onChange={handleChange}
                 value={signupInfo.password}
                 aria-required="true"
+                autoComplete="password"
               />
             </div>
           </div>
@@ -169,20 +173,13 @@ const Signup = () => {
             </div>
           )}
 
-          {/* Display loading state */}
-          {isLoading && (
-            <div className="flex items-center justify-center text-sm text-gray-600">
-              Signing up...
-            </div>
-          )}
-
           <div>
             <button
               type="submit"
               className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               disabled={isLoading}
             >
-              Sign Up
+              {isLoading ? "Signing up..." : "Signup"}
             </button>
           </div>
         </form>

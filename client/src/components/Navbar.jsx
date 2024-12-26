@@ -20,6 +20,7 @@ const Navbar = () => {
   const navigation = [
     { name: "Home", to: "/", },
     { name: "About", to: "/about", },
+    { name: "Login", to: "/login", },
   ];
   return (
     <Disclosure as="nav" className="bg-gray-800">
