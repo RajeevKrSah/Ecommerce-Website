@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import FeatureCard from "../components/FeatureCard";
+import Footer from "../components/Footer";
 
 const AboutPage = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -97,6 +98,7 @@ const AboutPage = () => {
           />
         </div>
       </div>
+      <Footer />
     </>
   );
 };
