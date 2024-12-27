@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const ProductCard = ({ item }) => {
   return (
@@ -6,11 +7,13 @@ const ProductCard = ({ item }) => {
       key={item._id}
       className="border p-3 rounded-lg bg-gray-50 hover:shadow-md transition-shadow"
     >
-      <img
-        src={item.img}
-        alt={item.title}
-        className="aspect-square w-full rounded-lg object-cover md:h-70 lg:h-75"
-      />
+      <Link to={`/products/${item._id}`}>
+        <img
+          src={item.img}
+          alt={item.title}
+          className="aspect-square w-full rounded-lg object-cover md:h-70 lg:h-75"
+        />
+      </Link>
       <div className="p-1 bg-white">
         <h3 className="text-base font-semibold text-gray-600 truncate">
           {item.title}
