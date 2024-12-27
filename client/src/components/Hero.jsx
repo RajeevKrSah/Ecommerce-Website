@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const Hero = () => {
   const [products, setProducts] = useState([]);
@@ -59,9 +60,12 @@ const Hero = () => {
               className="w-full h-72 object-cover rounded-lg"
             />
             <div className="absolute inset-0 flex items-center justify-center bg-black rounded-lg bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity">
-              <button className="px-4 py-2 bg-white text-black font-medium rounded">
+              <Link
+                to="/women"
+                className="px-4 py-2 bg-white text-black font-medium rounded"
+              >
                 Shop Women
-              </button>
+              </Link>
             </div>
           </div>
           {/* Kids */}
