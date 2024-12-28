@@ -1,6 +1,7 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaUser } from "react-icons/fa6";
+
 import {
   Disclosure,
   DisclosureButton,
@@ -17,11 +18,23 @@ import {
 } from "@heroicons/react/24/outline";
 
 const Navbar = () => {
+  const navigate = useNavigate()
   const navigation = [
     { name: "Home", to: "/", },
     { name: "About", to: "/about", },
     { name: "Login", to: "/login", },
   ];
+
+  // Sign Out handler
+  const handleSignOut = () =>{
+    localStorage.removeItem('token');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('loggedInUser');
+    setTimeout(() => {
+      navigate('/login');
+    }, 1000);
+  }
+
   return (
     <Disclosure as="nav" className="bg-gray-800">
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -105,6 +118,7 @@ const Navbar = () => {
                 <MenuItem>
                   <button
                     className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:outline-none"
+                    onClick={handleSignOut}
                   >
                     Sign out
                   </button>
