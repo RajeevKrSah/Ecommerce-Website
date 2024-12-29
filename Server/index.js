@@ -5,6 +5,7 @@ import cors from 'cors'
 import cookieParser from 'cookie-parser'
 
 import authRouter from './routes/auth.js'
+import userRouter from './routes/user.js'
 import productRouter from './routes/product.js'
 
 const app = express()
@@ -22,6 +23,7 @@ app.use(cookieParser())
 
 
 app.use('/api/auth',authRouter)
+app.use('/api/users',userRouter)
 app.use('/api/products',productRouter)
 // Database connection 
 connectDB()
