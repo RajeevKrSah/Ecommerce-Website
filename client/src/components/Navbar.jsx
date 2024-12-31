@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaUser } from "react-icons/fa6";
-
+import { useDispatch, useSelector } from "react-redux";
 import {
   Disclosure,
   DisclosureButton,
@@ -16,24 +16,34 @@ import {
   ShoppingBagIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
+import useAuthToken from "../hooks/useAuthToken";
+import { fetchCart } from "../features/cart/cartSlice";
 
 const Navbar = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const navigation = [
-    { name: "Home", to: "/", },
-    { name: "About", to: "/about", },
-    { name: "Login", to: "/login", },
+    { name: "Home", to: "/" },
+    { name: "About", to: "/about" },
+    { name: "Login", to: "/login" },
   ];
 
   // Sign Out handler
-  const handleSignOut = () =>{
-    localStorage.removeItem('token');
-    localStorage.removeItem('userId');
-    localStorage.removeItem('loggedInUser');
+  const handleSignOut = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("loggedInUser");
     setTimeout(() => {
-      navigate('/login');
+      navigate("/login");
     }, 1000);
-  }
+  };
+  const dispatch = useDispatch();
+  const { userId, token } = useAuthToken();
+
+  useEffect(() => {
+    dispatch(fetchCart({ userId, token }));
+  }, [dispatch, userId, token]);
+
+  const { cartItems } = useSelector((state) => state.cart);
 
   return (
     <Disclosure as="nav" className="bg-gray-800">
@@ -80,7 +90,7 @@ const Navbar = () => {
               <span className="absolute -inset-1.5" />
               <ShoppingBagIcon aria-hidden="true" className="size-6" />
               <span className="absolute -top-2 -right-1 inline-flex items-center justify-center rounded-full bg-gray-500 px-1.5 py-0.5 text-xs font-medium text-white">
-                0
+                {cartItems.length}
               </span>
             </Link>
 
@@ -91,7 +101,7 @@ const Navbar = () => {
                   <span className="absolute -inset-1.5" />
                   <span className="sr-only">Open user menu</span>
                   <div className="text-gray-200 text-xl p-1">
-                  <FaUser/>
+                    <FaUser />
                   </div>
                 </MenuButton>
               </div>
@@ -133,11 +143,9 @@ const Navbar = () => {
         <div className="space-y-1 px-2 pb-2 ">
           {navigation.map((item) => (
             <Link to={item.to} key={item.name}>
-            <DisclosureButton
-              className="block px-3 py-1.5 text-sm font-medium text-gray-200 hover:bg-gray-700 hover:text-white rounded-md "
-            >
-              {item.name}
-            </DisclosureButton>
+              <DisclosureButton className="block px-3 py-1.5 text-sm font-medium text-gray-200 hover:bg-gray-700 hover:text-white rounded-md ">
+                {item.name}
+              </DisclosureButton>
             </Link>
           ))}
         </div>
